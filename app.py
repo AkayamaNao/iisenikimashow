@@ -1,14 +1,64 @@
-from flask import Flask
+# # -*- coding: utf-8 -*-
+from flask import request, abort, Flask
+from sqlalchemy import create_engine, func
+import pandas as pd
+from logging import DEBUG, INFO, Formatter
+from logging.config import dictConfig
+from sqlalchemy.orm import sessionmaker
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, UnfollowEvent, PostbackEvent
+import requests
+import json
+
+import settings
+from models import *
 
 app = Flask(__name__)
 
+db_engine = create_engine(settings.db_info, pool_pre_ping=True)
+line_bot_api = LineBotApi(settings.access_token)
+handler = WebhookHandler(settings.secret_key)
+headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + settings.access_token
+}
+reply_url = 'https://api.line.me/v2/bot/message/reply'
+
 @app.route('/')
 def index():
-    return 'hello, world'
+    return 'hello, world2'
+
+
+@app.route("/callback", methods=['POST'])
+def callback():
+    signature = request.headers['X-Line-Signature']
+    body = request.get_data(as_text=True)
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
+    return 'OK'
+
+
+@handler.add(MessageEvent, message=TextMessage)
+def message_text(event):
+    user_id = event.source.user_id
+    profile = line_bot_api.get_profile(user_id)
+    user_name = profile.display_name
+    text = event.message.text
+
+    messages = [f'{user_id}\n{user_name}\n{text}']
+    data = {'replyToken': event.reply_token, 'messages': messages}
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + settings.access_token
+    }
+    res = requests.post(reply_url, data=json.dumps(data), headers=headers)
+
 
 if __name__ == '__main__':
     app.run()
-
 
 # # -*- coding: utf-8 -*-
 # from flask import request, abort, Flask
