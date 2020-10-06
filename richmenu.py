@@ -48,7 +48,7 @@ print(f'richmenu_id = "{rich_menu_id}"')
 #     size=RichMenuSize(width=2500, height=843),
 #     selected=True,
 #     name="with_room",
-#     chat_bar_text="数字を送信して回答",
+#     chat_bar_text="メニューを開く・閉じる",
 #     areas=[
 #         RichMenuArea(
 #             bounds=RichMenuBounds(x=0, y=0, width=834, height=843),

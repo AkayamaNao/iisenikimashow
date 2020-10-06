@@ -25,4 +25,4 @@ JSON_AS_ASCII = False
 
 
 none_room_id = "richmenu-0958458e2c192318899675788a681b2b"
-with_room_id = "richmenu-8d5a5aaca6a7bc20b36e3250579cc9e1"
+with_room_id = "richmenu-f9dde53f4b02a1bc2bfa442b0b61e27a"
