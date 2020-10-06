@@ -200,7 +200,8 @@ def message_text(event):
             })
     else:
         if room_id:
-            if text.replace('.', '', 1).isdecimal():
+            # if text.replace('.', '', 1).isdecimal():
+            try:
                 number = float(text)
                 if number % 1 == 0:
                     number = int(number)
@@ -226,7 +227,7 @@ def message_text(event):
                     "type": "text",
                     "text": quiz_results(s, room_id)
                 })
-            else:
+            except:
                 reply_json.append({
                     "type": "text",
                     "text": "数字のみを送信してください。"
