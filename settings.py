@@ -2,7 +2,7 @@ from pathlib import Path
 import psycopg2
 import subprocess
 
-testmode = 1
+testmode = 0
 
 # LINEbot
 access_token = 'drl+7l75GhWk5Z0sxuNGWCSp274X4gCjrCiwFCRO++v+Pe3FPiH4CUUOrRFplDWPpw5lJxBVCpNsqEUOcq7UuAE5hF+CyXGC/WQQqYDV85U2NqcMpsyEGqJEvtOpn2PHC0pnp0rTk7jF71DmdSB2VwdB04t89/1O/w1cDnyilFU='

@@ -77,14 +77,14 @@ def quiz_results(s, room_id):
         return text
     df = df.sort_values('number')
     df = df.reset_index(drop=True)
-    middle = len(df) // 2
+    middle = df.iloc[len(df) // 2]['number']
     text = '【結果発表】'
     for index, row in df.iterrows():
         number = float(row['number'])
         if number % 1 == 0:
             number = int(number)
         text += f"\n{row['name']}\t\t{number}"
-        if index == middle:
+        if row['number'] == middle:
             text += '\t☆'
     return text
 
@@ -205,10 +205,11 @@ def message_text(event):
                 if number % 1 == 0:
                     number = int(number)
                 query = f'''
-                    select answers.id,answers.status from answers right outer join (select * from users where room='{room_id}') as users on answers.user_id = users.id;
+                    select answers.id,answers.status from answers inner join (select * from users where room='{room_id}') as users on answers.user_id = users.id;
                     '''
                 df = pd.read_sql(query, db_engine)
-                if df['status'].sum() == 0 and ~df['status'].isna().any():
+                # if df['status'].sum() == 0 and ~df['status'].isna().any():
+                if df['status'].sum() == 0:
                     for index, row in df.iterrows():
                         answer = s.query(Answers).filter_by(id=int(row['id'])).first()
                         s.delete(answer)
